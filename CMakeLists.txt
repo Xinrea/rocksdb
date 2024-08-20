@@ -93,11 +93,11 @@ option(WITH_SNAPPY "build with SNAPPY" OFF)
 option(WITH_LZ4 "build with lz4" OFF)
 option(WITH_ZLIB "build with zlib" OFF)
 option(WITH_ZSTD "build with zstd" OFF)
-option(WITH_WINDOWS_UTF8_FILENAMES "use UTF8 as characterset for opening files, regardles of the system code page" OFF)
+option(WITH_WINDOWS_UTF8_FILENAMES "use UTF8 as characterset for opening files, regardles of the system code page" ON)
 if (WITH_WINDOWS_UTF8_FILENAMES)
   add_definitions(-DROCKSDB_WINDOWS_UTF8_FILENAMES)
 endif()
-option(ROCKSDB_BUILD_SHARED "Build shared versions of the RocksDB libraries" ON)
+option(ROCKSDB_BUILD_SHARED "Build shared versions of the RocksDB libraries" OFF)
 
 if( NOT DEFINED CMAKE_CXX_STANDARD )
   set(CMAKE_CXX_STANDARD 17)
@@ -1178,11 +1178,11 @@ endif()
 
 option(WITH_JNI "build with JNI" OFF)
 # Tests are excluded from Release builds
-CMAKE_DEPENDENT_OPTION(WITH_TESTS "build with tests" ON
+CMAKE_DEPENDENT_OPTION(WITH_TESTS "build with tests" OFF
   "CMAKE_BUILD_TYPE STREQUAL Debug" OFF)
-option(WITH_BENCHMARK_TOOLS "build with benchmarks" ON)
-option(WITH_CORE_TOOLS "build with ldb and sst_dump" ON)
-option(WITH_TOOLS "build with tools" ON)
+option(WITH_BENCHMARK_TOOLS "build with benchmarks" OFF)
+option(WITH_CORE_TOOLS "build with ldb and sst_dump" OFF)
+option(WITH_TOOLS "build with tools" OFF)
 
 if(WITH_TESTS OR WITH_BENCHMARK_TOOLS OR WITH_TOOLS OR WITH_JNI OR JNI)
   include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/third-party/gtest-1.8.1/fused-src)
@@ -1605,7 +1605,7 @@ if(WITH_BENCHMARK_TOOLS)
     ${ROCKSDB_LIB} ${GFLAGS_LIB} ${FOLLY_LIBS})
 endif()
 
-option(WITH_TRACE_TOOLS "build with trace tools" ON)
+option(WITH_TRACE_TOOLS "build with trace tools" OFF)
 if(WITH_TRACE_TOOLS)
   add_executable(block_cache_trace_analyzer${ARTIFACT_SUFFIX}
     tools/block_cache_analyzer/block_cache_trace_analyzer_tool.cc)

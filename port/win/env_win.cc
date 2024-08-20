@@ -18,6 +18,8 @@
 #include <shlwapi.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <codecvt>
+#include <locale>
 #include <windows.h>
 #include <winioctl.h>
 
@@ -69,6 +71,12 @@ void WinthreadCall(const char* label, std::error_code result) {
   }
 }
 
+
+std::wstring StringToWString(const std::string& str) {
+  std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+  return converter.from_bytes(str);
+}
+
 }  // namespace
 
 namespace port {
@@ -88,7 +96,7 @@ WinClock::WinClock()
     }
   }
 
-  HMODULE module = GetModuleHandle("kernel32.dll");
+  HMODULE module = GetModuleHandle(L"kernel32.dll");
   if (module != NULL) {
     GetSystemTimePreciseAsFileTime_ = (FnGetSystemTimePreciseAsFileTime)(
         void*)GetProcAddress(module, "GetSystemTimePreciseAsFileTime");
@@ -1205,7 +1213,7 @@ size_t WinFileSystem::GetSectorSize(const std::string& fname) {
     return sector_size;
   }
 
-  HANDLE hDevice = CreateFile(devicename, 0, 0, nullptr, OPEN_EXISTING,
+  HANDLE hDevice = CreateFile(StringToWString(devicename).c_str(), 0, 0, nullptr, OPEN_EXISTING,
                               FILE_ATTRIBUTE_NORMAL, nullptr);
 
   if (hDevice == INVALID_HANDLE_VALUE) {
